@@ -1,0 +1,1340 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"  name="viewport" >
+<meta name="renderer" content="webkit|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=EmulateIE9; IE=edge;" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<meta content="black" name="apple-mobile-web-app-status-bar-style" />
+<meta content="telephone=no" name="format-detection" />
+<title>Untitled Document</title>
+<meta name="Description" content="">
+<meta name="Keywords" content="">
+<script>
+  if(!window.console) {
+    var console = {
+      log: function(){},
+      assert: function () {}
+    }
+    window.console = console;
+  }
+</script>
+<!-- <link rel="stylesheet" href="./org-font/iconfont.css"> -->
+<style type="text/css">
+  * {
+    padding: 0;
+    margin: 0;
+  }
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+  #fff{
+
+  }
+  #fff p{
+    display: inline-block;
+    font-size: 14px;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px #000
+  }
+
+
+
+</style>
+
+<!-- <script src="es6-shim.0.35.1.js"></script> -->
+<!-- <script src="polyfill.js"></script> -->
+<!-- <script src="typedarray.js"></script> -->
+<!-- <script src="promise-polyfill.js"></script> -->
+<!-- <script src="es5-shim.js"></script>
+<script src="es5-sham.js"></script>
+<script src="blob.js"></script>
+<script src="canvas-toBlob.js"></script>
+<script src="fileSaver.js"></script> -->
+<!-- <script src="canvg.js"></script> -->
+<!--  -->
+<!-- <script src="saveSvgToPng.js"></script> -->
+<!-- <script src="saveSvgToPng2.js"></script> -->
+<script type="text/javascript" src="./d3.v4-2.js"></script>
+</head>
+<body style="background: #ddd;">
+<textarea style="display:none; z-index: 9; position: absolute; top: 60px; right: 0; width: 300px; height: 500px" id="content"></textarea>
+<div id="fff" style="display: -none;position: fixed; top: 0; left: 0; height: 60px; right: 0;  padding: 10px; ">
+  <div id="fm" >
+    <p>
+      连接线类型: 
+      <select  name="lineType" >
+        <option value="bezier" selected>曲线</option>
+        <option value="straight">折线</option>
+      </select>
+    </p>
+
+    <p>
+      排列: 
+      <select name="direction" >
+        <option value="horizontal">水平</option>
+        <option value="vertical" selected>垂直</option>
+      </select>
+    </p>
+    
+    <p>
+      模式 (通过各种组合):
+      <select name="groups">
+        <option value="0">默认</option>
+        <option value="1">人员汇报关系图</option>
+        <option value="2">职位汇报关系图</option>
+        <option value="3">自定义1</option>
+        <option value="4">自定义2</option>
+        <option value="5">自定义3</option>
+        <option value="6">自定义4</option>
+        <option value="7">自定义5</option>
+      </select>
+    </p>
+
+    <p>
+      标准 与 简单 (内置模式)
+      <select name="mode">
+        <option value="standard" selected>标准</option>
+        <option value="simple" >简单</option>
+      </select>
+    </p>
+    <p>
+      简单模式下的 根节点显示方式 (水平, 垂直) 与其他节点相反
+      <select name="flipRoot">
+        <option value="false" >正常</option>
+        <option value="true" selected>翻转</option>
+      </select>
+    </p>
+    <div style="padding-top: 10px">
+      <p>
+        背景: 
+        <select key="color" name="canvasBackground" style="background: #fff">
+          <option value="#fff" selected>背景0</option>
+          <option value="#009688" >背景1</option>
+          <option value="#FF9800">颜色2</option>
+          <option value="#2196F3">颜色3</option>
+        </select>
+      </p>
+      <p>
+        边框:
+        <select key="color" name="nodeBorderColor" style="background: #ddd">
+          <option value="#ddd" selected>颜色0</option>
+          <option value="#009688" >颜色1</option>
+          <option value="#FF9800">颜色2</option>
+          <option value="#2196F3">颜色3</option>
+        </select>
+      </p>
+      <p>
+        连接线颜色:
+        <select key="color" name="lineColor" style="background: #ccc">
+          <option value="#ccc" selected>颜色0</option>
+          <option value="#009688" >颜色1</option>
+          <option value="#FF9800" >颜色2</option>
+          <option value="#2196F3">颜色3</option>
+        </select>
+      </p>
+      <p>
+        无图片时占位色:
+        <select key="color" name="nullPhotoColor" style="background: #c1e8f7">
+          <option value="#c1e8f7" selected>颜色0</option>
+          <option value="#009688" >颜色1</option>
+          <option value="#FF9800" >颜色2</option>
+          <option value="#2196F3">颜色3</option>
+        </select>
+      </p>
+      <p><button class="downPng" onClick="downloadFile('png');">下载png to</button></p>
+      <p><button class="downSvg" onClick="downloadFile('svg');">下载svg to</button></p>
+      <p><button class="create"> 生成 </button> | <button class="clear"> 清除数据 </button></p>
+      <p><button class="back"> 后退 </button></p>
+    </div>
+  </div>
+</div>
+<div id="body" class="organiztion" style="position: absolute; top: 100px; left: 0; right: 0; bottom: 0; background: #fff; overflow: hidden">
+ <!--  <div class="zoomBar">
+    <span class="btn iconfont icon-plus"></span>
+    <span class="progress-box">
+      <span class="progress"></span>
+    </span>
+    <span class="btn iconfont icon-locate"></span>
+    <span class="btn iconfont icon-minus"></span>
+  </div> -->
+</div>
+<div style="display: none;">
+
+<canvas id="canvas"></canvas>
+<script src="./packages/structure/dist/structure.js"></script>
+<!-- <script src="./structure.js"></script> -->
+<script>
+var json = {
+ "name": "根",
+ "title": "软件产品事业部",
+ "userName": "张升",
+ "a": {b: "./avatar/2.jpg"},
+ "children": [
+  {
+   "name": "一级(level = 1)清除数据清除数据清除数据清除数据清除数据清除数据清除数据清除数据清除数据",
+   "level": 1,
+   "a": { b: "./avatar/1.jpeg"},
+   "position": "姓名",
+   "jobClass": "职级1",
+   "jobGrade": "职等1",
+   "workForceNum": 623424,
+   "curEmpForceNum": 242348,
+   "actualNum": 22342,
+   "sss": '扩展1扩展1扩展1扩展1扩展1扩展1扩展1',
+   "ss2": '扩展2扩展2扩展2扩展2扩展2',
+   "userName": "张升",
+   "children": [
+      {
+       "name": "二级(level = 2)cluster",
+       "a": {b: "./avatar/2.jpg"},
+       "level": 2,
+       "children": [
+          {
+            "name": "AgglomerativeCluster", "size": 3938, "photo": "./avatar/3.jpeg",
+            "children": [
+
+              {
+                "name": 3,
+                "children": [
+                  {
+                    name: 4,
+                    children: [{name: 5}]
+                  }   
+                ]
+              }
+            ]
+          },
+          {"name": "CommunityStructure", "size": 3812, "photo": "./avatar/4.jpg"},
+          {"name": "HierarchicalCluster", "size": 6714, "photo": "./avatar/5.jpeg"},
+          {"name": "MergeEdge", "size": 743}
+       ]
+      },
+      {
+       "name": "三级(level = 3)扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1扩展1",
+       "photo": "./avatar/6.jpg",
+       "level": 3,
+       "children": [
+        {"name": "BetweennessCentrality", "size": 3534},
+        {"name": "LinkDistance", "size": 5731},
+        {"name": "MaxFlowMinCut", "size": 7840},
+        {"name": "ShortestPaths", "size": 5914},
+        {"name": "SpanningTree", "size": 3416}
+       ]
+      },
+      {
+       "name": "5级, (level = 5)optimization",
+       "level": 4,
+       "children": [
+        {"name": "AspectRatioBanker", "size": 7074}
+       ]
+      }
+   ]
+  },
+  
+  {
+   "name": "二级(level = 2)animate",
+   "level":2,
+   "children": [
+    {"name": "Easing", "size": 10},
+    {"name": "FunctionSequence", "size": 5842},
+    {
+     "name": "interpolate",
+     "children": [
+      {"name": "ArrayInterpolator", "size": 1983},
+      {"name": "ColorInterpolator", "size": 2047},
+      {"name": "DateInterpolator", "size": 1375},
+      {"name": "Interpolator", "size": 8746},
+      {"name": "MatrixInterpolator", "size": 2202},
+      {"name": "NumberInterpolator", "size": 1382},
+      {"name": "ObjectInterpolator", "size": 1629},
+      {"name": "PointInterpolator", "size": 1675},
+      {"name": "RectangleInterpolator", "size": 2042}
+     ]
+    },
+    {"name": "ISchedulable", "size": 1041},
+    {"name": "Parallel", "size": 5176},
+    {"name": "Pause", "size": 449},
+    {"name": "Scheduler", "size": 5593},
+    {"name": "Sequence", "size": 5534},
+    {"name": "Transition", "size": 9201},
+    {"name": "Transitioner", "size": 19975},
+    {"name": "TransitionEvent", "size": 1116},
+    {"name": "Tween", "size": 6006}
+   ]
+  },
+  {
+   "name": "二级(level = 2)data",
+   "level": 2,
+   "children": [
+    {
+     "name": "converters",
+     "children": [
+      {"name": "Converters", "size": 721},
+      {"name": "DelimitedTextConverter", "size": 4294},
+      {"name": "GraphMLConverter", "size": 9800},
+      {"name": "IDataConverter", "size": 1314},
+      {"name": "JSONConverter", "size": 2220}
+     ]
+    },
+    {"name": "DataField", "size": 1759},
+    {"name": "DataSchema", "size": 2165},
+    {"name": "DataSet", "size": 586},
+    {"name": "DataSource", "size": 3331},
+    {"name": "DataTable", "size": 772},
+    {"name": "DataUtil", "size": 3322}
+   ]
+  },
+  {
+   "name": "display",
+   "level": 1,
+   "children": [
+    {"name": "DirtySprite", "size": 8833},
+    {"name": "LineSprite", "size": 1732},
+    {"name": "RectSprite", "size": 3623},
+    {"name": "TextSprite", "size": 10066}
+   ]
+  },
+  {
+   "name": "四级(level = 4)flex",
+   "level": 4,
+   "hasChildren": true
+  },
+  {
+   "name": "physics",
+   "children": [
+    {"name": "DragForce", "size": 1082},
+    {"name": "GravityForce", "size": 1336}
+   ]
+  },
+  {
+   "name": "三级(level = 3)query",
+   "level": 3,
+   "children": [
+    {"name": "AggregateExpression", "size": 1616},
+    {"name": "And", "size": 1027},
+    {"name": "Arithmetic", "size": 3891},
+    {"name": "Average", "size": 891},
+    {"name": "BinaryExpression", "size": 2893},
+    {"name": "Comparison", "size": 5103},
+    {"name": "CompositeExpression", "size": 3677},
+    {"name": "Count", "size": 781},
+    {"name": "DateUtil", "size": 4141},
+    {"name": "Distinct", "size": 933},
+    {"name": "Expression", "size": 5130},
+    {"name": "ExpressionIterator", "size": 3617},
+    {"name": "Fn", "size": 3240},
+    {"name": "If", "size": 2732},
+    {"name": "IsA", "size": 2039},
+    {"name": "Literal", "size": 1214},
+    {"name": "Match", "size": 3748},
+    {"name": "Maximum", "size": 843},
+    {
+     "name": "methods",
+     "level": 5,
+     "children": [
+      {"name": "add", "size": 593},
+      {"name": "and", "size": 330},
+      {"name": "average", "size": 287},
+      {"name": "count", "size": 277},
+      {"name": "distinct", "size": 292},
+      {"name": "div", "size": 595},
+      {"name": "eq", "size": 594},
+      {"name": "fn", "size": 460},
+      {"name": "gt", "size": 603},
+      {"name": "gte", "size": 625},
+      {"name": "iff", "size": 748},
+      {"name": "isa", "size": 461},
+      {"name": "lt", "size": 597},
+      {"name": "lte", "size": 619},
+      {"name": "max", "size": 283},
+      {"name": "min", "size": 283},
+      {"name": "mod", "size": 591},
+      {"name": "mul", "size": 603},
+      {"name": "neq", "size": 599},
+      {"name": "not", "size": 386},
+      {"name": "or", "size": 323},
+      {"name": "orderby", "size": 307},
+      {"name": "range", "size": 772},
+      {"name": "select", "size": 296},
+      {"name": "stddev", "size": 363},
+      {"name": "sub", "size": 600},
+      {"name": "sum", "size": 280},
+      {"name": "update", "size": 307},
+      {"name": "variance", "size": 335},
+      {"name": "where", "size": 299},
+      {"name": "xor", "size": 354},
+      {"name": "_", "size": 264}
+     ]
+    },
+    {"name": "Minimum", "size": 843},
+    {"name": "Not", "size": 1554},
+    {"name": "Or", "size": 970},
+    {"name": "Query", "size": 13896},
+    {"name": "Range", "size": 1594},
+    {"name": "StringUtil", "size": 4130},
+    {"name": "Sum", "size": 791},
+    {"name": "Variable", "size": 1124},
+    {"name": "Variance", "size": 1876},
+    {"name": "Xor", "size": 1101}
+   ]
+  },
+  {
+   "name": "二级(level = 2)scale",
+   "level": 2,
+   "children": [
+    {"name": "IScaleMap", "size": 2105},
+    {"name": "LinearScale", "size": 1316},
+    {"name": "LogScale", "size": 3151},
+    {"name": "OrdinalScale", "size": 3770},
+    {"name": "QuantileScale", "size": 2435},
+    {"name": "QuantitativeScale", "size": 4839},
+    {"name": "RootScale", "size": 1756},
+    {"name": "Scale", "size": 4268},
+    {"name": "ScaleType", "size": 1821},
+    {"name": "TimeScale", "size": 5833}
+   ]
+  },
+  {
+   "name": "三级(level = 3)util",
+   "level": 3,
+   "children": [
+    {"name": "Arrays", "size": 8258},
+    {"name": "Colors", "size": 10001},
+    {"name": "Dates", "size": 8217},
+    {"name": "Displays", "size": 12555},
+    {"name": "Filter", "size": 2324},
+    {"name": "Geometry", "size": 10993},
+    {
+     "name": "heap",
+     "children": [
+      {"name": "FibonacciHeap", "size": 9354},
+      {"name": "HeapNode", "size": 1233}
+     ]
+    },
+    {"name": "IEvaluable", "size": 335},
+    {"name": "IPredicate", "size": 383},
+    {"name": "IValueProxy", "size": 874},
+    {
+     "name": "math",
+     "children": [
+      {"name": "DenseMatrix", "size": 3165},
+      {"name": "IMatrix", "size": 2815},
+      {"name": "SparseMatrix", "size": 3366}
+     ]
+    },
+    {"name": "Maths", "size": 17705},
+    {"name": "Orientation", "size": 1486},
+    {
+     "name": "palette",
+     "children": [
+      {"name": "ColorPalette", "size": 6367},
+      {"name": "Palette", "size": 1229},
+      {"name": "ShapePalette", "size": 2059},
+      {"name": "SizePalette", "size": 2291}
+     ]
+    },
+    {"name": "Property", "size": 5559},
+    {"name": "Shapes", "size": 19118},
+    {"name": "Sort", "size": 6887},
+    {"name": "Stats", "size": 6557},
+    {"name": "Strings", "size": 22026}
+   ]
+  },
+  {
+   "name": "四级(level = 4)vis",
+   "level": 4,
+   "photo": "./react-logo.png",
+   "children": [
+    {
+     "name": "axis",
+     "children": [
+      {"name": "Axes", "size": 1302},
+      {"name": "Axis", "size": 24593},
+      {"name": "AxisGridLine", "size": 652},
+      {"name": "AxisLabel", "size": 636},
+      {"name": "CartesianAxes", "size": 6703}
+     ]
+    },
+    {
+     "name": "controls",
+     "children": [
+      {"name": "AnchorControl", "size": 2138},
+      {"name": "ClickControl", "size": 3824},
+      {"name": "Control", "size": 1353},
+      {"name": "ControlList", "size": 4665},
+      {"name": "DragControl", "size": 2649},
+      {"name": "ExpandControl", "size": 2832},
+      {"name": "HoverControl", "size": 4896},
+      {"name": "IControl", "size": 763},
+      {"name": "PanZoomControl", "size": 5222},
+      {"name": "SelectionControl", "size": 7862},
+      {"name": "TooltipControl", "size": 8435}
+     ]
+    },
+    {
+     "name": "data",
+     "children": [
+      {"name": "Data", "size": 20544},
+      {"name": "DataList", "size": 19788},
+      {"name": "DataSprite", "size": 10349},
+      {"name": "EdgeSprite", "size": 3301},
+      {"name": "NodeSprite", "size": 19382},
+      {
+       "name": "render",
+       "children": [
+        {"name": "ArrowType", "size": 698},
+        {"name": "EdgeRenderer", "size": 5569},
+        {"name": "IRenderer", "size": 353},
+        {"name": "ShapeRenderer", "size": 2247}
+       ]
+      },
+      {"name": "ScaleBinding", "size": 11275},
+      {"name": "Tree", "size": 7147},
+      {"name": "TreeBuilder", "size": 9930}
+     ]
+    },
+    {
+     "name": "events",
+     "children": [
+      {"name": "DataEvent", "size": 2313},
+      {"name": "SelectionEvent", "size": 1880},
+      {"name": "TooltipEvent", "size": 1701},
+      {"name": "VisualizationEvent", "size": 1117}
+     ]
+    },
+    {
+     "name": "legend",
+     "children": [
+      {"name": "Legend", "size": 20859},
+      {"name": "LegendItem", "size": 4614},
+      {"name": "LegendRange", "size": 10530}
+     ]
+    },
+    {
+     "name": "operator",
+     "children": [
+      {
+       "name": "distortion",
+       "children": [
+        {"name": "BifocalDistortion", "size": 4461},
+        {"name": "Distortion", "size": 6314},
+        {"name": "FisheyeDistortion", "size": 3444}
+       ]
+      },
+      {
+       "name": "encoder",
+       "children": [
+        {"name": "ColorEncoder", "size": 3179},
+        {"name": "Encoder", "size": 4060},
+        {"name": "PropertyEncoder", "size": 4138},
+        {"name": "ShapeEncoder", "size": 1690},
+        {"name": "SizeEncoder", "size": 1830}
+       ]
+      },
+      {
+       "name": "filter",
+       "children": [
+        {"name": "FisheyeTreeFilter", "size": 5219},
+        {"name": "GraphDistanceFilter", "size": 3165},
+        {"name": "VisibilityFilter", "size": 3509}
+       ]
+      },
+      {"name": "IOperator", "size": 1286},
+      {
+       "name": "label",
+       "children": [
+        {"name": "Labeler", "size": 9956},
+        {"name": "RadialLabeler", "size": 3899},
+        {"name": "StackedAreaLabeler", "size": 3202}
+       ]
+      },
+      {
+       "name": "layout",
+       "children": [
+        {"name": "AxisLayout", "size": 6725},
+        {"name": "BundledEdgeRouter", "size": 3727},
+        {"name": "CircleLayout", "size": 9317},
+        {"name": "CirclePackingLayout", "size": 12003},
+        {"name": "DendrogramLayout", "size": 4853},
+        {"name": "ForceDirectedLayout", "size": 8411},
+        {"name": "IcicleTreeLayout", "size": 4864},
+        {"name": "IndentedTreeLayout", "size": 3174},
+        {"name": "Layout", "size": 7881},
+        {"name": "NodeLinkTreeLayout", "size": 12870},
+        {"name": "PieLayout", "size": 2728},
+        {"name": "RadialTreeLayout", "size": 12348},
+        {"name": "RandomLayout", "size": 870},
+        {"name": "StackedAreaLayout", "size": 9121},
+        {"name": "TreeMapLayout", "size": 9191}
+       ]
+      },
+      {"name": "Operator", "size": 2490},
+      {"name": "OperatorList", "size": 5248},
+      {"name": "OperatorSequence", "size": 4190},
+      {"name": "OperatorSwitch", "size": 2581},
+      {"name": "SortOperator", "size": 2023}
+     ]
+    },
+    {"name": "Visualization", "size": 16540}
+   ]
+  }
+ ]
+}
+var json2 = {
+  name: 'root',
+  children: [
+    {
+      name: '1',
+      children: [
+        {name: '1-1'},{name: '1-2'},{name: '1-3'},{name: '1-3'},
+      ]
+    },
+    {
+      name: '2',
+      children: [
+        {
+          name: '2-1',
+          children: [
+            {name: '2-1-1'},{name: '2-1-2'},{name: '2-1-3'}
+          ]
+        },
+        {
+          name: '2-2',
+          children: [
+            {name: '2-2-1'},{name: '2-2-2'},{name: '2-2-3'}
+          ]
+        },
+        {
+          name: '2-3',
+          children: [
+            {name: '2-3-1'},{name: '2-3-2'},{name: '2-3-3'}
+          ]
+        },
+        {name: '2-4'}
+      ]
+    },
+    {
+      name: '3',
+      children: [
+        {name: '3-1'},
+        {
+          name: '3-2',
+          children: [
+            {name: '3-2-1'},{name: '3-2-2'},{name: '3-2-3'}
+          ]
+        },
+        {
+          name: '3-3'
+        },
+      ]
+    },
+    {
+      name: '4',
+      children: [
+        {name: '4-1'},{name: '4-2'},{name: '4-3'},{name: '4-3'}
+      ]
+    }
+
+  ]
+
+}
+var cont = document.getElementById('body');
+var sz = cont.getBoundingClientRect();
+var sss = new Structure({
+  // 图像高宽
+  photoWidth: 60,
+  // 图像高宽
+  photoHeight: 60,
+  groups: [
+    {
+      label: '名称',
+      key: 'name',
+      icon: function (d) {return '#icon-company2'},
+      textAlign: 'start', // [start, middle]
+      className: 'aaa bbb',
+      // fontSize: 12
+    },
+    {
+      key: 'photo',
+      label: 'user',
+      icon: '',
+      info: [
+        {
+          key: 'userName',
+        },
+        {
+          key: 'jobClass',
+          label: '职级',
+          icon: '#icon-position',
+          fontSize: 14
+        },
+        {
+          key: 'jobGrade',
+          label: '职等',
+          icon: '#icon-position',
+          fontSize: 12
+        }
+      ]
+    },
+    {
+      label: '部门',
+      key: 'title',
+      icon: '#icon-department',
+      textAlign: 'start', // [start, middle]
+      className: ''
+    },
+    {
+      label: '职位',
+      key: 'title',
+      icon: '#icon-position',
+      textAlign: 'start', // [start, middle]
+      className: ''
+    }
+  ],
+   
+  lastGroups: [
+    // {
+    //   key: 'workForceNum',
+    //   label: '编制',
+    //   color: '#1372b0'
+    // }, {
+    //   key: 'curEmpForceNum',
+    //   label: '在编',
+    //   color: '#d1992e'
+    // }, {
+    //   key: 'actualNum',
+    //   label: '实际',
+    //   color: '#549e9d'
+    // }
+  ],
+  mode: 'standard',
+  flipRoot: false,
+  searchFocusingCenter: false,
+  photoKeyName: 'a.b',
+  root: json2,
+  canvasWidth: sz.width,
+  canvasHeight: sz.height,
+  defaultExpandLevel: 2,
+  // nodeWidth: 170,
+  lineType: 'bezier',
+  direction: 'vertical',
+  openDrag: true,
+  collapse: function (data) {
+    console.log('%c收起 -- 执行业务层的回调', 'font-size:14px; color: #8BC34A;')
+  },
+  expand: function (data) {
+    console.log('%c展开 -- 执行业务层展开回调', 'font-size:14px; color: #FF9800;')
+    // return new Promise(function (resolve, reject) {
+    //   resolve({
+    //     data: [
+    //       {
+    //         name: 'aaa',
+    //         children: [
+    //           {
+    //             name: 'bbb'
+    //           }
+    //         ]
+    //       },
+    //       {
+    //         name: 'cc',
+    //         children: [
+    //           {
+    //             name: 'bbb'
+    //           }
+    //         ]
+    //       }
+    //     ]
+    //   });
+    // });
+    console.log(data)
+  },
+  expandAll: function () {
+    return new Promise(function (resolve, reject) {
+      resolve({
+        // 与初始时属于格式一致, Object
+        data: {
+          name: '根', 
+          children: [
+            {
+              name: 'aaa',
+              children: [
+                {
+                  name: 'bbba'
+                }
+              ]
+            },
+            {
+              name: 'cc',
+              children: [
+                {
+                  name: 'bbbc'
+                }
+              ]
+            }
+          ]
+        }
+      });
+    });    
+  },
+  selected: function (data, status) {
+
+      console.log('%c选中-反选 -- 执行业务层的回调', 'font-size:14px; color: #8BC34A;')
+      console.log('当前状态::', status ? '选中' : '反选')
+      return new Promise(function (resolve, reject) {
+        reject('aa')
+      });
+    
+  },
+  selectedNodeForRoot: function (data) {
+    console.log('selectedNodeForRoot::')
+      // backhd();
+      // return new Promise(function (resolve, reject) {
+      //   resolve({
+      //     data: [
+      //       {
+      //         name: 'aaa',
+      //         children: [
+      //           {
+      //             name: 'bbb'
+      //           }
+      //         ]
+      //       },
+      //       {
+      //         name: 'cc',
+      //         children: [
+      //           {
+      //             name: 'bbb'
+      //           }
+      //         ]
+      //       }
+      //     ]
+      //   });
+      // });
+    
+  },
+  dropDownMenu: {
+    menuClassName: 'mmm',
+    menuList: function (data) {
+        return [
+        {
+          key: 'rename',
+          name: '更名'
+        },
+        {
+          key: 'delete',
+          name: '删除'
+        }
+      ]
+    },
+    fn: function (key, data, dom) {
+      return new Promise(function (resolve, reject) {
+        if (key === 'delete') {
+          resolve({
+            data: null
+          })
+        } else {
+          resolve({
+            data: {
+              name: data.name + '-新增',
+              children: [{name: '新增222'}]
+            },
+          });
+        }
+      });
+    }
+  },
+  /**
+   * [sortNode description]
+   * @type {Object}
+   * preChange = true 或 fn 不存在, 则按照用户操作结果更新视图
+   */
+  sortNode: {
+    preChange: true,
+    fn: function (targetDataNode, dragNodeData, opstions) {
+      console.log(opstions)
+      var num = Math.round(Math.random());
+      return new Promise(function (resolve, reject) {
+          resolve();
+      });
+    }
+  },
+  /**
+   * [sortNode description]
+   * @type {Object}
+   * preChange = true 或 fn 不存在, 则按照用户操作结果更新视图
+   */
+  transferNode: {
+    preChange: true,
+    // fn: function (targetDataNode, dragNodeData, opstions) {
+    //   var num = Math.round(Math.random());
+    //   return new Promise(function (resolve, reject) {
+    //     // reject();
+    //     // return;
+    //     try {
+    //       var o = Structure.extend(true, {}, targetDataNode);
+    //       var aData = Structure.extend(true, {}, dragNodeData);
+    //       // console.log(t)
+    //       o.name = '转移-复制-并转';
+    //       aData.name = aData.name + '---' + 1;
+    //       if (o.children) {
+    //         o.children.push(Structure.extend(true, {}, dragNodeData))
+    //       } else {
+    //         o.children = [Structure.extend(true, {}, dragNodeData)];
+    //       }
+    //       console.log(o)
+    //         setTimeout(function () {
+    //         resolve({
+    //           A: aData,
+    //           B: o
+    //         })
+    //         }, 3000)
+    //     } catch (e) {console.log(e)}
+    //     // reject();
+    //   });
+    // }
+  }
+});
+window.sss = sss;
+
+var options = {
+  photoLeftGap: {
+    0: 28,
+    1: 10,
+    2: 0,
+    3: 28,
+    4: 28,
+    5: 28,
+    6: 28,
+    7: 28
+  },
+  photoWidth: {
+    0: 48,
+    1: 60,
+    2: 0,
+    3: 48,
+    4: 48,
+    5: 48,
+    7: 48,
+    6: 48
+  },
+  photoHeight: {
+    0: 48,
+    1: 60,
+    2: 0,
+    3: 48,
+    4: 48,
+    5: 48,
+    6: 48,
+    7: 48
+  },
+  groups: {
+    0: [
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        iconColor: 'red'
+        // fontSize: 12
+      },
+      {
+        key: 'photo',
+        label: 'user',
+        icon: '',
+        info: [
+          {
+            key: 'userName',
+          },
+          {
+            key: 'jobClass',
+            label: '职级',
+            icon: '#icon-position',
+            // fontSize: 14
+          },
+          {
+            key: 'jobGrade',
+            label: '职等',
+            icon: '#icon-position',
+            // fontSize: 12
+          }
+        ]
+      },
+      {
+        label: '部门',
+        key: 'title',
+        icon: '#icon-department',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      },
+    ],
+    1: [
+      {
+        key: 'photo',
+        label: 'user',
+        icon: '',
+        info: [
+          {
+            key: 'userName',
+          },
+          {
+            key: 'jobClass',
+            label: '',
+            icon: '',
+            fontSize: 12
+          },
+          {
+            key: 'jobGrade',
+            label: '',
+            icon: '',
+            fontSize: 12
+          }
+        ]
+      },
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: '',
+        // fontSize: 12
+      }
+    ],
+    2: [
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: '',
+        // fontSize: 12
+      },
+      {
+        label: '部门',
+        key: 'name',
+        icon: '#icon-department',
+        textAlign: 'start', // [start, middle]
+        className: '',
+        // fontSize: 12
+      },
+      {
+        label: '职位',
+        key: 'name',
+        icon: '#icon-position',
+        textAlign: 'start', // [start, middle]
+        className: '',
+        // fontSize: 12
+      }
+    ],
+    3: [
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      },
+      {
+        key: 'photo',
+        label: 'user',
+        icon: '',
+        info: [
+          {
+            key: 'userName',
+          },
+          {
+            key: 'jobClass',
+            label: '职级',
+            icon: '#icon-company',
+            fontSize: 12
+          },
+          {
+            key: 'jobGrade',
+            label: '职等',
+            icon: '',
+            fontSize: 12
+          }
+        ]
+      },
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      },
+    ],
+    4: [
+
+      {
+        key: 'photo',
+        label: 'user',
+        icon: '',
+        info: [
+          {
+            key: 'userName',
+          },
+          {
+            key: 'jobClass',
+            label: '职级',
+            icon: '#icon-company',
+            fontSize: 12
+          },
+          {
+            key: 'jobGrade',
+            label: '职等',
+            icon: '',
+            fontSize: 12
+          }
+        ]
+      },
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      },
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      }
+    ],
+    5: [
+
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      }
+    ],
+    6: [
+
+      {
+        label: '',
+        key: 'name',
+        icon: '#icon-company',
+        textAlign: 'start', // [start, middle]
+        className: 'aaa bbb',
+        // fontSize: 12
+      }
+    ],
+    7: [
+    ]
+  },
+  lastGroups: {
+    0: [
+      {
+        key: 'workForceNum',
+        label: '人员',
+        color: '#1372b0'
+      }, {
+        key: 'curEmpForceNum',
+        label: '职位',
+        color: '#d1992e'
+      }
+    ],
+    1: [
+      {
+        key: 'workForceNum',
+        label: '直接下属',
+        color: '#1372b0'
+      }, {
+        key: 'curEmpForceNum',
+        label: '职位',
+        color: '#d1992e'
+      }, {
+        key: 'curEmpForceNum',
+        label: '全部下属',
+        color: '#d1992e'
+      }
+    ],
+    2: [
+      {
+        key: 'workForceNum',
+        label: '编制',
+        color: '#1372b0'
+      }, {
+        key: 'curEmpForceNum',
+        label: '下级',
+        color: '#d1992e'
+      }, {
+        key: 'curEmpForceNum',
+        label: '实际',
+        color: '#d1992e'
+      }
+    ],
+    3: [
+      {
+        key: 'workForceNum',
+        label: '编制',
+        color: '#1372b0'
+      }, {
+        key: 'curEmpForceNum',
+        label: '下级',
+        color: '#d1992e'
+      }, {
+        key: 'curEmpForceNum',
+        label: '实际',
+        color: '#d1992e'
+      }
+    ],
+    4: [
+      {
+        key: 'workForceNum',
+        label: '编制',
+        color: '#1372b0'
+      }, {
+        key: 'curEmpForceNum',
+        label: '下级',
+        color: '#d1992e'
+      }, {
+        key: 'curEmpForceNum',
+        label: '实际',
+        color: '#d1992e'
+      }
+    ],
+    5: [
+      {
+        key: 'curEmpForceNum',
+        label: '实际',
+        color: '#d1992e'
+      }
+    ],
+    6: [
+    ],
+    7: [
+      {
+        key: 'workForceNum',
+        label: '编制',
+        color: '#1372b0'
+      }, {
+        key: 'curEmpForceNum',
+        label: '下级',
+        color: '#d1992e'
+      }, {
+        key: 'curEmpForceNum',
+        label: '实际',
+        color: '#d1992e'
+      }
+    ]
+  }
+}
+
+
+var fm = document.getElementById('fm');
+var ddd = document.getElementById('ddd');
+var content = document.getElementById('content')
+var inp = fm.querySelectorAll('select');
+var btn = fm.querySelector('.clear');
+var btnCreate = fm.querySelector('.create');
+var backBtn = fm.querySelector('.back');
+for (var i = 0, len = inp.length; i < len; i++) {
+  inpDataHandle.call(inp[i]);
+  ;(function (dom) {
+    dom.addEventListener('change', function () {
+      // inpDataHandle.call(this);
+    });
+  })(inp[i]);
+}
+function inpDataHandle () {
+  var name = this.name, value = this.value;
+  var key = this.getAttribute('key');
+  if(key && key === 'color') {
+    this.style.background = value;
+  }
+  if (name === 'groups') {
+    [
+      'photoLeftGap',
+      'photoWidth',
+      'photoHeight',
+      'groups',
+      'lastGroups',
+    ].forEach(function (v, i) {
+      sss.ops[v] = options[v][+(value)]
+    })
+  } else if (name === 'mode') {
+    sss.ops.mode = value;
+  } else {
+    sss.ops[name] = name === 'flipRoot' ? value === 'true' : value;
+  }
+  return sss.ops;
+}
+btn.addEventListener('click', function () {
+  sss.clearData();
+});
+btnCreate.addEventListener('click', function () {
+  sss.reStart();
+  sss.update();
+});
+var his = sss._selectForRootHistory;
+var backhd = function () {
+  if (!his || !his.length) {
+    backBtn.disabled = true;
+  } else {
+     backBtn.removeAttribute('disabled');
+  } 
+}
+// backhd();
+backBtn.addEventListener('click', function () {
+  sss.selectedForBack();
+  // backhd();
+});
+function transformSvg(svg) {
+  return sss.transformSvg(svg);
+}
+var canvas = document.getElementById('canvas');
+var userAgent = navigator.userAgent;
+function downloadFile(type) {
+  var isIE9 = /MSIE\s9.0/.test(userAgent);
+  var isEdge = userAgent.indexOf("Edge") > -1;
+  var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1;
+  var saveSvgOps = {
+    backgroundColor: sss.ops.canvasBackground
+  }
+  var typeMap = {
+    png: saveSvgAsPng,
+    svg: saveSvg,
+    IE: svgAsDataUri
+  }
+  var cloneSvg = transformSvg(sss.svg.node());
+  if (isIE || isEdge) {
+    svgAsDataUri(cloneSvg, {
+      backgroundColor: sss.ops.canvasBackground
+    }).then(function(uri) {
+      console.log(uri);
+    })
+  } else {
+    svgAsDataUri(cloneSvg, {
+      backgroundColor: sss.ops.canvasBackground
+    }).then(function(uri) {
+      console.log(uri);
+    })
+    typeMap[type](cloneSvg, 'diagram.' + type, saveSvgOps)
+  }
+}
+
+// }, 2000)
+</script>
+</body>
+</html>

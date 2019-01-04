@@ -1,0 +1,15 @@
+.vscode
+.gitignore
+.eslintrc
+package.json
+dist/*
+assets
+node_modules
+mock
+.DS_Store
+script/*
+build/*
+es/**/*
+lib/**/*
+packages/*/lib/*
+packages/*/dist/*
